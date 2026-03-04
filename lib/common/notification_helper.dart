@@ -1,22 +1,46 @@
+import 'dart:math';
+
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_timezone/flutter_timezone.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+
+/// Top-level callback invoked by AndroidAlarmManager in an isolate.
+/// Must be a top-level or static function.
+@pragma('vm:entry-point')
+Future<void> dailyReminderCallback() async {
+  final FlutterLocalNotificationsPlugin plugin =
+      FlutterLocalNotificationsPlugin();
+
+  const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+  const initSettings = InitializationSettings(android: androidSettings);
+  await plugin.initialize(initSettings);
+
+  const androidDetails = AndroidNotificationDetails(
+    'daily_reminder',
+    'Daily Reminder',
+    channelDescription: 'Daily lunch reminder notification',
+    importance: Importance.high,
+    priority: Priority.high,
+    icon: '@mipmap/ic_launcher',
+  );
+
+  const notificationDetails = NotificationDetails(android: androidDetails);
+
+  await plugin.show(
+    Random().nextInt(100000),
+    'Waktunya Makan Siang! 🍽️',
+    'Yuk, lihat rekomendasi restoran favoritmu hari ini!',
+    notificationDetails,
+  );
+}
 
 class NotificationHelper {
   static final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
 
-  static const int _dailyReminderId = 1;
-  static const String _channelId = 'daily_reminder';
-  static const String _channelName = 'Daily Reminder';
-  static const String _channelDesc = 'Daily lunch reminder notification';
+  static const int _alarmId = 1;
 
+  /// Initialize flutter_local_notifications plugin.
   static Future<void> initialize() async {
-    tz.initializeTimeZones();
-    final String timeZoneName = await FlutterTimezone.getLocalTimezone();
-    tz.setLocalLocation(tz.getLocation(timeZoneName));
-
     const androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
@@ -34,6 +58,7 @@ class NotificationHelper {
     await _plugin.initialize(initSettings);
   }
 
+  /// Request notification & exact alarm permissions on Android.
   static Future<void> requestPermissions() async {
     final androidImpl = _plugin.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>();
@@ -44,53 +69,51 @@ class NotificationHelper {
     }
   }
 
+  /// Schedule a daily notification at 11:00 AM using AndroidAlarmManager.
   static Future<void> scheduleDailyElevenAMNotification() async {
-    const androidDetails = AndroidNotificationDetails(
-      _channelId,
-      _channelName,
-      channelDescription: _channelDesc,
-      importance: Importance.high,
-      priority: Priority.high,
-      icon: '@mipmap/ic_launcher',
-    );
-
-    const notificationDetails = NotificationDetails(
-      android: androidDetails,
-      iOS: DarwinNotificationDetails(),
-    );
-
-    await _plugin.zonedSchedule(
-      _dailyReminderId,
-      'Waktunya Makan Siang! 🍽️',
-      'Yuk, lihat rekomendasi restoran favoritmu hari ini!',
-      _nextInstanceOfElevenAM(),
-      notificationDetails,
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-    );
-  }
-
-  static tz.TZDateTime _nextInstanceOfElevenAM() {
-    final now = tz.TZDateTime.now(tz.local);
-    var scheduledDate = tz.TZDateTime(
-      tz.local,
-      now.year,
-      now.month,
-      now.day,
-      11,
-      0,
-    );
+    // Calculate how long until the next 11:00 AM
+    final now = DateTime.now();
+    var scheduledDate = DateTime(now.year, now.month, now.day, 11, 0);
 
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
 
-    return scheduledDate;
+    await AndroidAlarmManager.periodic(
+      const Duration(hours: 24),
+      _alarmId,
+      dailyReminderCallback,
+      startAt: scheduledDate,
+      exact: true,
+      wakeup: true,
+    );
   }
 
+  /// Cancel the daily reminder alarm.
   static Future<void> cancelDailyReminder() async {
-    await _plugin.cancel(_dailyReminderId);
+    await AndroidAlarmManager.cancel(_alarmId);
+  }
+
+  /// Show a test notification immediately.
+  static Future<void> showTestNotification() async {
+    await requestPermissions();
+
+    const androidDetails = AndroidNotificationDetails(
+      'daily_reminder',
+      'Daily Reminder',
+      channelDescription: 'Daily lunch reminder notification',
+      importance: Importance.high,
+      priority: Priority.high,
+      icon: '@mipmap/ic_launcher',
+    );
+
+    const notificationDetails = NotificationDetails(android: androidDetails);
+
+    await _plugin.show(
+      0,
+      'Waktunya Makan Siang! \u{1F37D}\u{FE0F}',
+      'Yuk, lihat rekomendasi restoran favoritmu hari ini!',
+      notificationDetails,
+    );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_flutter/common/notification_helper.dart';
@@ -13,6 +14,7 @@ import 'package:restaurant_flutter/domain/usecases/is_favorite_restaurant.dart';
 import 'package:restaurant_flutter/domain/usecases/remove_favorite_restaurant.dart';
 import 'package:restaurant_flutter/presentation/pages/main_page.dart';
 import 'package:restaurant_flutter/presentation/providers/favorite_provider.dart';
+import 'package:restaurant_flutter/presentation/providers/main_index_provider.dart';
 import 'package:restaurant_flutter/presentation/providers/reminder_provider.dart';
 import 'package:restaurant_flutter/presentation/providers/restaurant_list_provider.dart';
 import 'package:restaurant_flutter/presentation/providers/theme_provider.dart';
@@ -20,6 +22,7 @@ import 'package:restaurant_flutter/presentation/providers/theme_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationHelper.initialize();
+  await AndroidAlarmManager.initialize();
   runApp(const MyApp());
 }
 
@@ -63,6 +66,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => ReminderProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => MainIndexProvider(),
         ),
       ],
       child: Consumer<ThemeProvider>(

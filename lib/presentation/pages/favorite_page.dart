@@ -125,12 +125,15 @@ class FavoritePage extends StatelessWidget {
           final restaurant = favorites[index];
           return RestaurantCard(
             restaurant: restaurant,
+            heroTagPrefix: 'fav',
             onTap: () async {
               await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      RestaurantDetailPage(restaurantId: restaurant.id),
+                  builder: (context) => RestaurantDetailPage(
+                    restaurantId: restaurant.id,
+                    heroTagPrefix: 'fav',
+                  ),
                 ),
               );
               if (context.mounted) {

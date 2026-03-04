@@ -11,7 +11,9 @@ class RestaurantRemoteDataSource {
       : client = client ?? http.Client();
 
   Future<List<RestaurantModel>> getRestaurantList() async {
-    final response = await client.get(Uri.parse('$_baseUrl/list'));
+    final response = await client
+        .get(Uri.parse('$_baseUrl/list'))
+        .timeout(const Duration(seconds: 15));
 
     if (response.statusCode == 200) {
       final body = json.decode(response.body);
@@ -25,7 +27,9 @@ class RestaurantRemoteDataSource {
   }
 
   Future<RestaurantDetailModel> getRestaurantDetail(String id) async {
-    final response = await client.get(Uri.parse('$_baseUrl/detail/$id'));
+    final response = await client
+        .get(Uri.parse('$_baseUrl/detail/$id'))
+        .timeout(const Duration(seconds: 15));
 
     if (response.statusCode == 200) {
       final body = json.decode(response.body);

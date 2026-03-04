@@ -15,8 +15,13 @@ import 'package:restaurant_flutter/presentation/widgets/loading_shimmer.dart';
 
 class RestaurantDetailPage extends StatelessWidget {
   final String restaurantId;
+  final String heroTagPrefix;
 
-  const RestaurantDetailPage({super.key, required this.restaurantId});
+  const RestaurantDetailPage({
+    super.key,
+    required this.restaurantId,
+    this.heroTagPrefix = 'list',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +33,15 @@ class RestaurantDetailPage extends StatelessWidget {
           ),
         ),
       )..fetchRestaurantDetail(restaurantId),
-      child: const _RestaurantDetailView(),
+      child: _RestaurantDetailView(heroTagPrefix: heroTagPrefix),
     );
   }
 }
 
 class _RestaurantDetailView extends StatefulWidget {
-  const _RestaurantDetailView();
+  final String heroTagPrefix;
+
+  const _RestaurantDetailView({required this.heroTagPrefix});
 
   @override
   State<_RestaurantDetailView> createState() => _RestaurantDetailViewState();
@@ -61,7 +68,10 @@ class _RestaurantDetailViewState extends State<_RestaurantDetailView> {
         return switch (provider.state) {
           ResultLoading() => const _DetailLoadingView(),
           ResultLoaded<RestaurantDetail>(data: final detail) =>
-            _DetailContentView(detail: detail),
+            _DetailContentView(
+              detail: detail,
+              heroTagPrefix: widget.heroTagPrefix,
+            ),
           ResultError(message: final message) => Scaffold(
               appBar: AppBar(),
               body: AppErrorWidget(
@@ -97,8 +107,12 @@ class _DetailLoadingView extends StatelessWidget {
 
 class _DetailContentView extends StatelessWidget {
   final RestaurantDetail detail;
+  final String heroTagPrefix;
 
-  const _DetailContentView({required this.detail});
+  const _DetailContentView({
+    required this.detail,
+    required this.heroTagPrefix,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +175,7 @@ class _DetailContentView extends StatelessWidget {
           ),
           flexibleSpace: FlexibleSpaceBar(
             background: Hero(
-              tag: 'restaurant-image-${detail.id}',
+              tag: 'restaurant-image-$heroTagPrefix-${detail.id}',
               child: CachedNetworkImage(
                 imageUrl: detail.largeImageUrl,
                 fit: BoxFit.cover,

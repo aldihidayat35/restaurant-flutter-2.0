@@ -6,11 +6,13 @@ import 'package:restaurant_flutter/domain/entities/restaurant.dart';
 class RestaurantCard extends StatelessWidget {
   final Restaurant restaurant;
   final VoidCallback onTap;
+  final String heroTagPrefix;
 
   const RestaurantCard({
     super.key,
     required this.restaurant,
     required this.onTap,
+    this.heroTagPrefix = 'list',
   });
 
   @override
@@ -36,7 +38,7 @@ class RestaurantCard extends StatelessWidget {
           children: [
             // Image
             Hero(
-              tag: 'restaurant-image-${restaurant.id}',
+              tag: 'restaurant-image-$heroTagPrefix-${restaurant.id}',
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(16),
