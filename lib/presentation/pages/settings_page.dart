@@ -21,15 +21,9 @@ class SettingsPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Settings',
-                    style: theme.textTheme.headlineLarge,
-                  ),
+                  Text('Settings', style: theme.textTheme.headlineLarge),
                   const SizedBox(height: 4),
-                  Text(
-                    'App preferences',
-                    style: theme.textTheme.bodyMedium,
-                  ),
+                  Text('App preferences', style: theme.textTheme.bodyMedium),
                 ],
               ),
             ),
@@ -42,8 +36,7 @@ class SettingsPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color:
-                          theme.colorScheme.primary.withValues(alpha: 0.06),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.06),
                       blurRadius: 20,
                       offset: const Offset(0, 4),
                     ),
@@ -60,10 +53,14 @@ class SettingsPage extends StatelessWidget {
                         duration: const Duration(milliseconds: 300),
                         transitionBuilder: (child, animation) {
                           return RotationTransition(
-                            turns:
-                                Tween(begin: 0.75, end: 1.0).animate(animation),
-                            child:
-                                FadeTransition(opacity: animation, child: child),
+                            turns: Tween(
+                              begin: 0.75,
+                              end: 1.0,
+                            ).animate(animation),
+                            child: FadeTransition(
+                              opacity: animation,
+                              child: child,
+                            ),
                           );
                         },
                         child: Icon(
@@ -103,8 +100,7 @@ class SettingsPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color:
-                          theme.colorScheme.primary.withValues(alpha: 0.06),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.06),
                       blurRadius: 20,
                       offset: const Offset(0, 4),
                     ),

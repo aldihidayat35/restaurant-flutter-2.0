@@ -101,9 +101,7 @@ Widget createSettingsTestApp({FakeReminderProvider? reminderProvider}) {
   return MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => ThemeProvider()),
-      ChangeNotifierProvider<ReminderProvider>(
-        create: (_) => fakeReminder,
-      ),
+      ChangeNotifierProvider<ReminderProvider>(create: (_) => fakeReminder),
     ],
     child: const MaterialApp(home: SettingsPage()),
   );
@@ -114,8 +112,9 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  testWidgets('MainPage should display bottom navigation with 3 tabs',
-      (WidgetTester tester) async {
+  testWidgets('MainPage should display bottom navigation with 3 tabs', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(createTestApp());
     await tester.pumpAndSettle();
 
@@ -126,8 +125,9 @@ void main() {
     expect(find.text('Settings'), findsOneWidget);
   });
 
-  testWidgets('Tapping Favorites tab should switch to favorites page',
-      (WidgetTester tester) async {
+  testWidgets('Tapping Favorites tab should switch to favorites page', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(createTestApp());
     await tester.pumpAndSettle();
 
@@ -137,8 +137,9 @@ void main() {
     expect(find.text('Your favorite restaurants'), findsOneWidget);
   });
 
-  testWidgets('Tapping Settings tab should show settings page',
-      (WidgetTester tester) async {
+  testWidgets('Tapping Settings tab should show settings page', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(createTestApp());
     await tester.pumpAndSettle();
 
@@ -150,8 +151,9 @@ void main() {
   });
 
   group('Daily Reminder (Push Notification) in Settings', () {
-    testWidgets('Daily Reminder switch should be off by default',
-        (WidgetTester tester) async {
+    testWidgets('Daily Reminder switch should be off by default', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(createSettingsTestApp());
       await tester.pumpAndSettle();
 
@@ -162,54 +164,53 @@ void main() {
       // The Switch widget should be in off state
       final switchFinder = find.byType(Switch);
       // There are 2 switches (theme + reminder), check the second one
-      final reminderSwitch =
-          tester.widget<Switch>(switchFinder.at(1));
+      final reminderSwitch = tester.widget<Switch>(switchFinder.at(1));
       expect(reminderSwitch.value, isFalse);
     });
 
     testWidgets(
-        'Tapping Daily Reminder switch should toggle it on and update subtitle',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(createSettingsTestApp());
-      await tester.pumpAndSettle();
+      'Tapping Daily Reminder switch should toggle it on and update subtitle',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(createSettingsTestApp());
+        await tester.pumpAndSettle();
 
-      // Initially off
-      expect(find.text('Reminder is off'), findsOneWidget);
+        // Initially off
+        expect(find.text('Reminder is off'), findsOneWidget);
 
-      // Tap the reminder switch (second Switch in the page)
-      final switchFinder = find.byType(Switch);
-      await tester.tap(switchFinder.at(1));
-      await tester.pumpAndSettle();
+        // Tap the reminder switch (second Switch in the page)
+        final switchFinder = find.byType(Switch);
+        await tester.tap(switchFinder.at(1));
+        await tester.pumpAndSettle();
 
-      // Should now be on with updated subtitle
-      expect(find.text('Reminder at 11:00 AM is on'), findsOneWidget);
+        // Should now be on with updated subtitle
+        expect(find.text('Reminder at 11:00 AM is on'), findsOneWidget);
 
-      final reminderSwitch =
-          tester.widget<Switch>(switchFinder.at(1));
-      expect(reminderSwitch.value, isTrue);
-    });
+        final reminderSwitch = tester.widget<Switch>(switchFinder.at(1));
+        expect(reminderSwitch.value, isTrue);
+      },
+    );
 
     testWidgets(
-        'Toggling Daily Reminder on then off should return to off state',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(createSettingsTestApp());
-      await tester.pumpAndSettle();
+      'Toggling Daily Reminder on then off should return to off state',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(createSettingsTestApp());
+        await tester.pumpAndSettle();
 
-      final switchFinder = find.byType(Switch);
+        final switchFinder = find.byType(Switch);
 
-      // Toggle ON
-      await tester.tap(switchFinder.at(1));
-      await tester.pumpAndSettle();
-      expect(find.text('Reminder at 11:00 AM is on'), findsOneWidget);
+        // Toggle ON
+        await tester.tap(switchFinder.at(1));
+        await tester.pumpAndSettle();
+        expect(find.text('Reminder at 11:00 AM is on'), findsOneWidget);
 
-      // Toggle OFF
-      await tester.tap(switchFinder.at(1));
-      await tester.pumpAndSettle();
-      expect(find.text('Reminder is off'), findsOneWidget);
+        // Toggle OFF
+        await tester.tap(switchFinder.at(1));
+        await tester.pumpAndSettle();
+        expect(find.text('Reminder is off'), findsOneWidget);
 
-      final reminderSwitch =
-          tester.widget<Switch>(switchFinder.at(1));
-      expect(reminderSwitch.value, isFalse);
-    });
+        final reminderSwitch = tester.widget<Switch>(switchFinder.at(1));
+        expect(reminderSwitch.value, isFalse);
+      },
+    );
   });
 }

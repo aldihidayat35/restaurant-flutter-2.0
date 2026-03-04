@@ -8,7 +8,7 @@ class RestaurantRemoteDataSource {
   final http.Client client;
 
   RestaurantRemoteDataSource({http.Client? client})
-      : client = client ?? http.Client();
+    : client = client ?? http.Client();
 
   Future<List<RestaurantModel>> getRestaurantList() async {
     final response = await client

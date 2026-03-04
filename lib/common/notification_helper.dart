@@ -41,8 +41,9 @@ class NotificationHelper {
 
   /// Initialize flutter_local_notifications plugin.
   static Future<void> initialize() async {
-    const androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
 
     const darwinSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
@@ -60,8 +61,10 @@ class NotificationHelper {
 
   /// Request notification & exact alarm permissions on Android.
   static Future<void> requestPermissions() async {
-    final androidImpl = _plugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
+    final androidImpl = _plugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
 
     if (androidImpl != null) {
       await androidImpl.requestNotificationsPermission();

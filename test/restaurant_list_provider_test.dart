@@ -32,7 +32,8 @@ class FakeSuccessRestaurantRepository implements RestaurantRepository {
   }
 
   @override
-  Future<RestaurantDetail> getRestaurantDetail(String id) async => throw UnimplementedError();
+  Future<RestaurantDetail> getRestaurantDetail(String id) async =>
+      throw UnimplementedError();
 }
 
 class FakeErrorRestaurantRepository implements RestaurantRepository {
@@ -42,7 +43,8 @@ class FakeErrorRestaurantRepository implements RestaurantRepository {
   }
 
   @override
-  Future<RestaurantDetail> getRestaurantDetail(String id) async => throw UnimplementedError();
+  Future<RestaurantDetail> getRestaurantDetail(String id) async =>
+      throw UnimplementedError();
 }
 
 class FakeEmptyRestaurantRepository implements RestaurantRepository {
@@ -52,7 +54,8 @@ class FakeEmptyRestaurantRepository implements RestaurantRepository {
   }
 
   @override
-  Future<RestaurantDetail> getRestaurantDetail(String id) async => throw UnimplementedError();
+  Future<RestaurantDetail> getRestaurantDetail(String id) async =>
+      throw UnimplementedError();
 }
 
 // ---------- Tests ----------
@@ -68,51 +71,60 @@ void main() {
       expect(provider.state, isA<ResultLoading>());
     });
 
-    test('harus mengembalikan daftar restoran ketika pengambilan data API berhasil', () async {
-      // Arrange
-      final useCase = GetRestaurantList(FakeSuccessRestaurantRepository());
-      final provider = RestaurantListProvider(getRestaurantList: useCase);
+    test(
+      'harus mengembalikan daftar restoran ketika pengambilan data API berhasil',
+      () async {
+        // Arrange
+        final useCase = GetRestaurantList(FakeSuccessRestaurantRepository());
+        final provider = RestaurantListProvider(getRestaurantList: useCase);
 
-      // Act — tunggu fetchRestaurantList selesai
-      await provider.fetchRestaurantList();
+        // Act — tunggu fetchRestaurantList selesai
+        await provider.fetchRestaurantList();
 
-      // Assert
-      expect(provider.state, isA<ResultLoaded<List<Restaurant>>>());
+        // Assert
+        expect(provider.state, isA<ResultLoaded<List<Restaurant>>>());
 
-      final loaded = provider.state as ResultLoaded<List<Restaurant>>;
-      expect(loaded.data.length, 2);
-      expect(loaded.data.first.name, 'Resto A');
-      expect(loaded.data.last.city, 'Bandung');
-    });
+        final loaded = provider.state as ResultLoaded<List<Restaurant>>;
+        expect(loaded.data.length, 2);
+        expect(loaded.data.first.name, 'Resto A');
+        expect(loaded.data.last.city, 'Bandung');
+      },
+    );
 
-    test('harus mengembalikan kesalahan ketika pengambilan data API gagal', () async {
-      // Arrange
-      final useCase = GetRestaurantList(FakeErrorRestaurantRepository());
-      final provider = RestaurantListProvider(getRestaurantList: useCase);
+    test(
+      'harus mengembalikan kesalahan ketika pengambilan data API gagal',
+      () async {
+        // Arrange
+        final useCase = GetRestaurantList(FakeErrorRestaurantRepository());
+        final provider = RestaurantListProvider(getRestaurantList: useCase);
 
-      // Act
-      await provider.fetchRestaurantList();
+        // Act
+        await provider.fetchRestaurantList();
 
-      // Assert
-      expect(provider.state, isA<ResultError<List<Restaurant>>>());
+        // Assert
+        expect(provider.state, isA<ResultError<List<Restaurant>>>());
 
-      final error = provider.state as ResultError<List<Restaurant>>;
-      expect(error.message, contains('Gagal mengambil data restoran'));
-    });
+        final error = provider.state as ResultError<List<Restaurant>>;
+        expect(error.message, contains('Gagal mengambil data restoran'));
+      },
+    );
 
-    test('harus mengembalikan list kosong ketika API berhasil tapi tidak ada data', () async {
-      // Arrange
-      final useCase = GetRestaurantList(FakeEmptyRestaurantRepository());
-      final provider = RestaurantListProvider(getRestaurantList: useCase);
+    test(
+      'harus mengembalikan list kosong ketika API berhasil tapi tidak ada data',
+      () async {
+        // Arrange
+        final useCase = GetRestaurantList(FakeEmptyRestaurantRepository());
+        final provider = RestaurantListProvider(getRestaurantList: useCase);
 
-      // Act
-      await provider.fetchRestaurantList();
+        // Act
+        await provider.fetchRestaurantList();
 
-      // Assert
-      expect(provider.state, isA<ResultLoaded<List<Restaurant>>>());
+        // Assert
+        expect(provider.state, isA<ResultLoaded<List<Restaurant>>>());
 
-      final loaded = provider.state as ResultLoaded<List<Restaurant>>;
-      expect(loaded.data, isEmpty);
-    });
+        final loaded = provider.state as ResultLoaded<List<Restaurant>>;
+        expect(loaded.data, isEmpty);
+      },
+    );
   });
 }

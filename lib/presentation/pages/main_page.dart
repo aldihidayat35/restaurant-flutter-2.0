@@ -23,18 +23,14 @@ class MainPage extends StatelessWidget {
         final currentIndex = indexProvider.currentIndex;
 
         return Scaffold(
-          body: IndexedStack(
-            index: currentIndex,
-            children: _pages,
-          ),
+          body: IndexedStack(index: currentIndex, children: _pages),
           bottomNavigationBar: NavigationBar(
             selectedIndex: currentIndex,
             onDestinationSelected: (index) {
               indexProvider.setIndex(index);
             },
             backgroundColor: theme.cardColor,
-            indicatorColor:
-                theme.colorScheme.primary.withValues(alpha: 0.15),
+            indicatorColor: theme.colorScheme.primary.withValues(alpha: 0.15),
             destinations: [
               NavigationDestination(
                 icon: Icon(

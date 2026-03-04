@@ -23,10 +23,7 @@ class FavoritePage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Favorites',
-                    style: theme.textTheme.headlineLarge,
-                  ),
+                  Text('Favorites', style: theme.textTheme.headlineLarge),
                   const SizedBox(height: 4),
                   Text(
                     'Your favorite restaurants',
@@ -41,30 +38,30 @@ class FavoritePage extends StatelessWidget {
                 builder: (context, provider, child) {
                   return switch (provider.state) {
                     ResultLoading() => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                      child: CircularProgressIndicator(),
+                    ),
                     ResultLoaded<List<Restaurant>>(data: final favorites) =>
                       favorites.isEmpty
                           ? _buildEmptyState(theme)
                           : _buildFavoriteList(context, favorites),
                     ResultError(message: final message) => Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.error_outline_rounded,
-                              size: 48,
-                              color: theme.colorScheme.error,
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              message,
-                              style: theme.textTheme.bodyMedium,
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.error_outline_rounded,
+                            size: 48,
+                            color: theme.colorScheme.error,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            message,
+                            style: theme.textTheme.bodyMedium,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
+                    ),
                   };
                 },
               ),
@@ -112,11 +109,9 @@ class FavoritePage extends StatelessWidget {
     );
   }
 
-  Widget _buildFavoriteList(
-      BuildContext context, List<Restaurant> favorites) {
+  Widget _buildFavoriteList(BuildContext context, List<Restaurant> favorites) {
     return RefreshIndicator(
-      onRefresh: () =>
-          context.read<FavoriteProvider>().fetchFavorites(),
+      onRefresh: () => context.read<FavoriteProvider>().fetchFavorites(),
       color: Theme.of(context).colorScheme.primary,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),

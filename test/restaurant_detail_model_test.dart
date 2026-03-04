@@ -93,11 +93,7 @@ void main() {
           drinks: [MenuItemModel(name: 'Es Teh')],
         ),
         customerReviews: const [
-          CustomerReviewModel(
-            name: 'User',
-            review: 'Good',
-            date: '2024-01-01',
-          ),
+          CustomerReviewModel(name: 'User', review: 'Good', date: '2024-01-01'),
         ],
       );
 

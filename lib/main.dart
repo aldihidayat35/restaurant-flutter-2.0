@@ -33,28 +33,28 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // Setup dependency injection
     final remoteDataSource = RestaurantRemoteDataSource();
-    final repository =
-        RestaurantRepositoryImpl(remoteDataSource: remoteDataSource);
+    final repository = RestaurantRepositoryImpl(
+      remoteDataSource: remoteDataSource,
+    );
     final getRestaurantList = GetRestaurantList(repository);
 
     final favoriteLocalDataSource = FavoriteLocalDataSource();
-    final favoriteRepository =
-        FavoriteRepositoryImpl(localDataSource: favoriteLocalDataSource);
+    final favoriteRepository = FavoriteRepositoryImpl(
+      localDataSource: favoriteLocalDataSource,
+    );
     final getFavoriteRestaurants = GetFavoriteRestaurants(favoriteRepository);
     final addFavoriteRestaurant = AddFavoriteRestaurant(favoriteRepository);
-    final removeFavoriteRestaurant =
-        RemoveFavoriteRestaurant(favoriteRepository);
+    final removeFavoriteRestaurant = RemoveFavoriteRestaurant(
+      favoriteRepository,
+    );
     final isFavoriteRestaurant = IsFavoriteRestaurant(favoriteRepository);
 
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(
-          create: (_) => ThemeProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => RestaurantListProvider(
-            getRestaurantList: getRestaurantList,
-          ),
+          create: (_) =>
+              RestaurantListProvider(getRestaurantList: getRestaurantList),
         ),
         ChangeNotifierProvider(
           create: (_) => FavoriteProvider(
@@ -64,12 +64,8 @@ class MyApp extends StatelessWidget {
             isFavoriteRestaurant: isFavoriteRestaurant,
           ),
         ),
-        ChangeNotifierProvider(
-          create: (_) => ReminderProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => MainIndexProvider(),
-        ),
+        ChangeNotifierProvider(create: (_) => ReminderProvider()),
+        ChangeNotifierProvider(create: (_) => MainIndexProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {

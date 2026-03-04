@@ -73,20 +73,19 @@ class _RestaurantDetailViewState extends State<_RestaurantDetailView> {
               heroTagPrefix: widget.heroTagPrefix,
             ),
           ResultError(message: final message) => Scaffold(
-              appBar: AppBar(),
-              body: AppErrorWidget(
-                message: message,
-                onRetry: () {
-                  final id = context
-                      .findAncestorWidgetOfExactType<
-                          RestaurantDetailPage>()
-                      ?.restaurantId;
-                  if (id != null) {
-                    provider.fetchRestaurantDetail(id);
-                  }
-                },
-              ),
+            appBar: AppBar(),
+            body: AppErrorWidget(
+              message: message,
+              onRetry: () {
+                final id = context
+                    .findAncestorWidgetOfExactType<RestaurantDetailPage>()
+                    ?.restaurantId;
+                if (id != null) {
+                  provider.fetchRestaurantDetail(id);
+                }
+              },
             ),
+          ),
         };
       },
     );
@@ -109,10 +108,7 @@ class _DetailContentView extends StatelessWidget {
   final RestaurantDetail detail;
   final String heroTagPrefix;
 
-  const _DetailContentView({
-    required this.detail,
-    required this.heroTagPrefix,
-  });
+  const _DetailContentView({required this.detail, required this.heroTagPrefix});
 
   @override
   Widget build(BuildContext context) {
@@ -152,136 +148,136 @@ class _DetailContentView extends StatelessWidget {
         },
       ),
       body: CustomScrollView(
-      slivers: [
-        // Hero Image AppBar
-        SliverAppBar(
-          expandedHeight: screenWidth > 600 ? 350 : 280,
-          pinned: true,
-          stretch: true,
-          backgroundColor: theme.scaffoldBackgroundColor,
-          leading: Padding(
-            padding: const EdgeInsets.all(8),
-            child: CircleAvatar(
-              backgroundColor:
-                  theme.scaffoldBackgroundColor.withValues(alpha: 0.8),
-              child: IconButton(
-                icon: Icon(
-                  Icons.arrow_back_rounded,
-                  color: theme.colorScheme.onSurface,
+        slivers: [
+          // Hero Image AppBar
+          SliverAppBar(
+            expandedHeight: screenWidth > 600 ? 350 : 280,
+            pinned: true,
+            stretch: true,
+            backgroundColor: theme.scaffoldBackgroundColor,
+            leading: Padding(
+              padding: const EdgeInsets.all(8),
+              child: CircleAvatar(
+                backgroundColor: theme.scaffoldBackgroundColor.withValues(
+                  alpha: 0.8,
                 ),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ),
-          ),
-          flexibleSpace: FlexibleSpaceBar(
-            background: Hero(
-              tag: 'restaurant-image-$heroTagPrefix-${detail.id}',
-              child: CachedNetworkImage(
-                imageUrl: detail.largeImageUrl,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Container(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: theme.colorScheme.primary,
-                    ),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_rounded,
+                    color: theme.colorScheme.onSurface,
                   ),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                  child: Icon(
-                    Icons.broken_image_rounded,
-                    size: 48,
-                    color:
-                        theme.colorScheme.primary.withValues(alpha: 0.3),
-                  ),
+                  onPressed: () => Navigator.pop(context),
                 ),
               ),
             ),
-          ),
-        ),
-
-        // Content
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: screenWidth > 600 ? 40 : 20,
-              vertical: 24,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Name & Rating
-                _buildHeader(theme),
-                const SizedBox(height: 16),
-
-                // Location & Address
-                _buildLocationInfo(theme),
-                const SizedBox(height: 20),
-
-                // Categories
-                if (detail.categories.isNotEmpty) ...[
-                  _buildCategories(theme),
-                  const SizedBox(height: 24),
-                ],
-
-                // Description
-                _buildSection(
-                  theme: theme,
-                  title: 'Description',
-                  icon: Icons.info_outline_rounded,
-                  child: Text(
-                    detail.description,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      height: 1.6,
-                      fontSize: 14,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Hero(
+                tag: 'restaurant-image-$heroTagPrefix-${detail.id}',
+                child: CachedNetworkImage(
+                  imageUrl: detail.largeImageUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                    child: Icon(
+                      Icons.broken_image_rounded,
+                      size: 48,
+                      color: theme.colorScheme.primary.withValues(alpha: 0.3),
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
+              ),
+            ),
+          ),
 
-                // Menu - Foods
-                _buildSection(
-                  theme: theme,
-                  title: 'Foods',
-                  icon: Icons.restaurant_menu_rounded,
-                  child: _buildMenuGrid(
-                    theme,
-                    detail.menus.foods,
-                    Icons.lunch_dining_rounded,
-                  ),
-                ),
-                const SizedBox(height: 24),
+          // Content
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth > 600 ? 40 : 20,
+                vertical: 24,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Name & Rating
+                  _buildHeader(theme),
+                  const SizedBox(height: 16),
 
-                // Menu - Drinks
-                _buildSection(
-                  theme: theme,
-                  title: 'Drinks',
-                  icon: Icons.local_cafe_rounded,
-                  child: _buildMenuGrid(
-                    theme,
-                    detail.menus.drinks,
-                    Icons.local_cafe_rounded,
-                  ),
-                ),
-                const SizedBox(height: 24),
+                  // Location & Address
+                  _buildLocationInfo(theme),
+                  const SizedBox(height: 20),
 
-                // Customer Reviews
-                if (detail.customerReviews.isNotEmpty) ...[
+                  // Categories
+                  if (detail.categories.isNotEmpty) ...[
+                    _buildCategories(theme),
+                    const SizedBox(height: 24),
+                  ],
+
+                  // Description
                   _buildSection(
                     theme: theme,
-                    title: 'Reviews',
-                    icon: Icons.rate_review_rounded,
-                    child: _buildReviews(theme),
+                    title: 'Description',
+                    icon: Icons.info_outline_rounded,
+                    child: Text(
+                      detail.description,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        height: 1.6,
+                        fontSize: 14,
+                      ),
+                    ),
                   ),
-                ],
+                  const SizedBox(height: 24),
 
-                const SizedBox(height: 32),
-              ],
+                  // Menu - Foods
+                  _buildSection(
+                    theme: theme,
+                    title: 'Foods',
+                    icon: Icons.restaurant_menu_rounded,
+                    child: _buildMenuGrid(
+                      theme,
+                      detail.menus.foods,
+                      Icons.lunch_dining_rounded,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Menu - Drinks
+                  _buildSection(
+                    theme: theme,
+                    title: 'Drinks',
+                    icon: Icons.local_cafe_rounded,
+                    child: _buildMenuGrid(
+                      theme,
+                      detail.menus.drinks,
+                      Icons.local_cafe_rounded,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Customer Reviews
+                  if (detail.customerReviews.isNotEmpty) ...[
+                    _buildSection(
+                      theme: theme,
+                      title: 'Reviews',
+                      icon: Icons.rate_review_rounded,
+                      child: _buildReviews(theme),
+                    ),
+                  ],
+
+                  const SizedBox(height: 32),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
       ),
     );
   }
@@ -291,10 +287,7 @@ class _DetailContentView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: Text(
-            detail.name,
-            style: theme.textTheme.headlineMedium,
-          ),
+          child: Text(detail.name, style: theme.textTheme.headlineMedium),
         ),
         const SizedBox(width: 12),
         Container(
@@ -407,11 +400,7 @@ class _DetailContentView extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuGrid(
-    ThemeData theme,
-    List<MenuItem> items,
-    IconData icon,
-  ) {
+  Widget _buildMenuGrid(ThemeData theme, List<MenuItem> items, IconData icon) {
     return Wrap(
       spacing: 10,
       runSpacing: 10,
@@ -470,8 +459,9 @@ class _DetailContentView extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 16,
-                    backgroundColor:
-                        theme.colorScheme.primary.withValues(alpha: 0.1),
+                    backgroundColor: theme.colorScheme.primary.withValues(
+                      alpha: 0.1,
+                    ),
                     child: Text(
                       review.name.isNotEmpty
                           ? review.name[0].toUpperCase()
@@ -494,10 +484,7 @@ class _DetailContentView extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Text(
-                          review.date,
-                          style: theme.textTheme.bodySmall,
-                        ),
+                        Text(review.date, style: theme.textTheme.bodySmall),
                       ],
                     ),
                   ),
@@ -506,9 +493,7 @@ class _DetailContentView extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 review.review,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  height: 1.4,
-                ),
+                style: theme.textTheme.bodyMedium?.copyWith(height: 1.4),
               ),
             ],
           ),

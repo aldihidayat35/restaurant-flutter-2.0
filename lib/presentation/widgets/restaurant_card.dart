@@ -55,8 +55,7 @@ class RestaurantCard extends StatelessWidget {
                     color: theme.colorScheme.primary.withValues(alpha: 0.1),
                     child: Icon(
                       Icons.restaurant_rounded,
-                      color:
-                          theme.colorScheme.primary.withValues(alpha: 0.3),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.3),
                       size: 32,
                     ),
                   ),
@@ -66,8 +65,7 @@ class RestaurantCard extends StatelessWidget {
                     color: theme.colorScheme.primary.withValues(alpha: 0.1),
                     child: Icon(
                       Icons.broken_image_rounded,
-                      color:
-                          theme.colorScheme.primary.withValues(alpha: 0.3),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.3),
                       size: 32,
                     ),
                   ),
